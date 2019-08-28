@@ -23,16 +23,15 @@ example:
 `kubectl delete service service-name -n development`
 
 
-> Get pods
-`kubectl get pods -n namespace`
+**Get pods**
+```kubectl get pods -n namespace```
 example:
-`kubectl get pods -n development`
+```kubectl get pods -n development```
 
-
-> View logs
-`kubectl logs -n pod-namespace pod-name`
+**View logs**
+```kubectl logs -n pod-namespace pod-name```
 example:
-`kubectl logs -n development service-name-somehash`
+```kubectl logs -n development service-name-somehash```
 
 > Check pod details
 `kubectl get pods -n pod-namespace pod-name -o yaml`
