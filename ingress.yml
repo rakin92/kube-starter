@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/whitelist-x-forwarded-for: "true"
+    ingress.kubernetes.io/whitelist-source-range: 0.0.0.0/32
+    # allowed up: can add more using ,
+    kubernetes.io/ingress.class: traefik
+  name: ingress-name
+  namespace: ingress-namespace
+spec:
+  rules:
+  - host: service-host.domain.com
+    http:
+      paths:
+      - path: /
+        backend: # points to internal kube service
+          serviceName: service-name
+          servicePort: app

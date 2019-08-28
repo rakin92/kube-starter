@@ -1,0 +1,55 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: deployment-name # example core-api
+  namespace: deployment-namespace # example production/development
+spec:
+  revisionHistoryLimit: 10
+  replicas: 3 # number of copy of pods running at once
+  strategy:
+    type: RollingUpdate # allows zero down time, update when new pods are healthy
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: app-name
+    spec:
+      containers: # container for the service
+      - name: deployment-name
+        image: LINK_TO_CONTAINER_IMAGE # Link to docker/git/image registry
+        resources: # amount of resource available for the container
+          limits:
+            cpu: 2000m
+            memory: 3000Mi
+          requests:
+            cpu: 300m
+            memory: 1500Mi
+        imagePullPolicy: Always
+        env: # environment variables
+        - name: ENV_VAR_NAME
+          value: ENV_VAR_VALUE
+        - name: ENV_VAR_NAME 
+          valueFrom: # Use secrets to load sensitive details such as API_KEYS/SECRETS/PASSWORDS
+            secretKeyRef:
+              name: secret-name
+              key: secret-key
+        ports:
+        - containerPort: 8080 # exposed container port
+        readinessProbe: # to notify pods is ready and healthy
+          httpGet:
+            path: /health
+            port: 8080
+          periodSeconds: 30
+          timeoutSeconds: 5
+          successThreshold: 2
+          failureThreshold: 5
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 300
+      imagePullSecrets:
+      - name: gitlab

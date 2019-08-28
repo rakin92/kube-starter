@@ -1,0 +1,35 @@
+# A Job that runs an specific image every 10 minutes
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: job-name
+  namespace: job-namespace
+spec:
+  schedule: "*/10 * * * *" # every 10 minutes https://crontab.guru/
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 5
+  failedJobsHistoryLimit: 5
+  startingDeadlineSeconds: 86400
+  jobTemplate:
+    metadata:
+      labels:
+        app: job-name
+    spec:
+      template:
+        spec:
+          activeDeadlineSeconds: 3600
+          containers:
+          - name: job-name
+            image: LINK_TO_CONTAINER_IMAGE # Link to docker/git/image registry
+            imagePullPolicy: Always
+            env: # environment variables if image needs env variables
+            - name: ENV_VAR_NAME
+              value: ENV_VAR_VALUE
+            - name: ENV_VAR_NAME 
+              valueFrom: # Use secrets to load sensitive details such as API_KEYS/SECRETS/PASSWORDS
+                secretKeyRef:
+                  name: secret-name
+                  key: secret-key
+          restartPolicy: OnFailure
+          imagePullSecrets:
+            - name: gitlab

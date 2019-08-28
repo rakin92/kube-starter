@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-name # example core-api
+  namespace: service-namespace # example production/development
+  labels:
+    app: service-name
+spec:
+  ports:
+  - name: app
+    protocol: http # possible (https|http|ssl|tcp)
+    port: 8080 # Exposed port
+  selector:
+    app: service-name

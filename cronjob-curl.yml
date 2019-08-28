@@ -1,0 +1,26 @@
+# A cronjob that hits an endpoint of another internal service every 30 minutes
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: job-name
+  namespace: job-namespace
+spec:
+  schedule: "*/30 * * * *" # every 30 minutes https://crontab.guru/
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 5
+  failedJobsHistoryLimit: 5
+  jobTemplate:
+    metadata:
+      labels:
+        app: job-name
+    spec:
+      template:
+        spec:
+          containers:
+          - name: callout
+            image: buildpack-deps:curl
+            args:
+            - /bin/sh
+            - -ec
+            - curl http://internal-service-name:port/endpoint
+          restartPolicy: Never
