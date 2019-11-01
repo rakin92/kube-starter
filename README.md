@@ -66,6 +66,16 @@ example:
 kubectl get pods -n development service-name-somehash -o yaml
 ```
 
+```
+namespace="namespace" && podname="pod-name" && \
+kubectl get pod "$(kubectl get pods -n "${namespace}" | grep "${podname}"  | awk '{print $1}' | head -n1)" -n "${namespace}" -o yaml | grep image
+```
+example:
+```
+namespace="development" && podname="mailing-service" && \
+kubectl get pod "$(kubectl get pods -n "${namespace}" | grep "${podname}"  | awk '{print $1}' | head -n1)" -n "${namespace}" -o yaml | grep image
+```
+
 **Manually trigger a cronjob**
 ```
 kubectl create job onetime-job-name --from=cronjob/job-name -n job-namespace
