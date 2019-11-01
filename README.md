@@ -66,6 +66,7 @@ example:
 kubectl get pods -n development service-name-somehash -o yaml
 ```
 
+**Check current deployed image**
 ```
 namespace="namespace" && podname="pod-name" && \
 kubectl get pod "$(kubectl get pods -n "${namespace}" | grep "${podname}"  | awk '{print $1}' | head -n1)" -n "${namespace}" -o yaml | grep image
